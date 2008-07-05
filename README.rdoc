@@ -1,0 +1,4 @@
+= ConTeXt interface description
+
+This repository is all about the ConTeXt interface (cont-en.xml and alike). Currently
+you will only find the RelaxNG grammar for the interface description here.
