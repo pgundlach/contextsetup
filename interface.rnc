@@ -70,6 +70,7 @@ Command    = element command  {
    attribute line      { text }?,
    attribute from      { text }?,
    attribute variant   { text }?,
+   attribute category  { text }?,
    Sequence, Arguments? }
 
 Sequence   = element sequence { 
@@ -126,7 +127,7 @@ Parameter = element parameter  {
 }
 
 ParameterContents = 
-   ( element constant { attribute type {text } } 
+   ( element constant { attribute type {text }, attribute default { text }? } 
    | element variable { attribute type {text } }   )+ 
 
 Constant = element constant {
