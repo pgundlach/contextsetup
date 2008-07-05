@@ -2,3 +2,11 @@
 
 This repository is all about the ConTeXt interface (cont-en.xml and alike). Currently
 you will only find the RelaxNG grammar for the interface description here.
+
+
+To convert the interface.rnc to a file that xmllint can handle you can use
+the trang converter:
+
+   java -jar trang.jar -I rnc -O rnc interface.rnc interface.rng
+
+
