@@ -1,0 +1,148 @@
+# Last Change: Sun Jun 29 18:43:39 2008
+
+# State: experimental (subject to change)
+# interface.rnc should be able to validate cont-??.xml and the
+# associated keys-??.xml
+
+# programs that work on the cont-??.xml files should be able to rely
+# on this schema.
+
+# Comments to patrick@gundla.ch
+
+default namespace = "http://www.pragma-ade.com/commands"
+
+start      = Interface
+
+Interface  = element interface { 
+   attribute name { text }, 
+   attribute version { text }?,
+   attribute language {text },
+   ( ( Define* , Command+ ) | Keys+ )
+ }
+ 
+################################################## keys-??.xml
+Keys = KeysVariables | KeysConstants | KeysElements | KeysCommands
+
+KeysVariables  = 
+  element variables {
+  element variable {
+    attribute name { text },
+    attribute value { text }
+  }+
+}
+  
+KeysConstants = 
+  element constants {
+  element constant {
+    attribute name { text },
+    attribute value { text }
+  }+
+}
+
+KeysElements = 
+   element elements {
+      element element {
+         attribute name { text },
+         attribute value { text }
+      }+
+   }
+
+KeysCommands = 
+   element commands {
+      element command {
+         attribute name { text },
+         attribute value { text }
+      }+
+   }
+
+################################################## cont-??.xml
+Define     = element define {
+    attribute name { text },
+    Constant* 
+}
+
+
+Command    = element command  { 
+   attribute name      { text },
+   attribute type      { "standalone" | "environment" }?,
+   attribute generated { "yes" | "no" }?,
+   attribute file      { text }?,
+   attribute line      { text }?,
+   attribute from      { text }?,
+   attribute variant   { text }?,
+   Sequence, Arguments? }
+
+Sequence   = element sequence { 
+   ( element string   { attribute value { text }}
+   | element variable { attribute value { text }}
+   )+  }
+
+Arguments  = element arguments { (Args+ | element choice { (Args,Args) }) }
+  
+Args = ( Keywords | Assignments | Content | Triplet | Reference | Word 
+       | Nothing | File | Csname | Index | Position | Displaymath | Tex )+
+
+Keywords   = element keywords { 
+   att.optional?,
+   att.list?, 
+   att.interactive?,
+   ( Resolve | (  Constant* & Inherit?  &  Variable* )  ) 
+}
+
+Resolve =  element resolve { attribute name { text } }
+
+Content    = element content {  att.list?, att.optional?, att.interactive? }
+
+Assignments = element assignments {
+   att.list?, att.optional?,  att.interactive?,
+   ( Parameter* &  Inherit?  ) }
+
+Triplet    = element triplet { att.list }
+
+Reference  = element reference { att.list?, att.optional?,  att.interactive? }
+
+Word       = element word { att.list? }
+
+Nothing    = element nothing { att.interactive?, attribute separator { text }?}
+
+File       = element file { empty }
+
+Csname     = element csname { empty }
+
+Index      = element index { att.list? }
+
+Position   = element position { att.list? } 
+
+Displaymath = element displaymath { empty }
+
+Tex        = element tex {
+   attribute command   { text },
+   attribute separator { text }? }
+
+#  --------------------------------------------------
+Parameter = element parameter  {
+   attribute name { text },
+   ( Resolve | ParameterContents )*
+}
+
+ParameterContents = 
+   ( element constant { attribute type {text } } 
+   | element variable { attribute type {text } }   )+ 
+
+Constant = element constant {
+   attribute type { text },
+   attribute default { "yes" | "no" }? }
+
+Variable = element variable {
+   attribute type { text },
+   attribute default { "yes" | "no" }? }
+
+Inherit = element inherit {
+   attribute name { text } }
+
+# --------------------------------------------------
+
+att.optional    = attribute optional    { "yes" | "no" }
+att.list        = attribute list        { "yes" | "no" }
+att.interactive = attribute interactive { "yes" | "default" | "exclusive" }
+
