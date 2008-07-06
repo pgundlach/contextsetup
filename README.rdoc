@@ -9,4 +9,10 @@ the trang converter:
 
    java -jar trang.jar -I rnc -O rng interface.rnc interface.rng
 
+To validate the file you can use several methods:
+* use xmllint: <tt>xmllint --relaxng interface.rng cont-en.xml</tt>
+* load it in your favourite xml editor (emacs,oxygenxml, xmlspy) and associate the schema with your file
 
+If you make any changes to the <tt>interface.rnc</tt> file, please send me the diffs!
+
+Patrick Gundlach (patrick@gundla.ch) 7/2008
