@@ -9,6 +9,8 @@ the trang converter:
 
    java -jar trang.jar -I rnc -O rng interface.rnc interface.rng
 
+(The trang converter and more information about RelaxNG is available at http://www.thaiopensource.com/relaxng/)
+
 To validate the file you can use several methods:
 * use xmllint: <tt>xmllint --relaxng interface.rng cont-en.xml</tt>
 * load it in your favourite xml editor (emacs,oxygenxml, xmlspy) and associate the schema with your file
