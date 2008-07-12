@@ -1,4 +1,4 @@
-# Last Change: Sun Jun 29 18:43:39 2008
+# Last Change: Sat Jul 12 10:09:08 2008
 
 # State: experimental (subject to change)
 # interface.rnc should be able to validate cont-??.xml and the
@@ -24,20 +24,20 @@ Interface  = element interface {
 Keys = KeysVariables | KeysConstants | KeysElements | KeysCommands
 
 KeysVariables  = 
-  element variables {
-  element variable {
-    attribute name { text },
-    attribute value { text }
-  }+
-}
-  
+   element variables {
+      element variable {
+         attribute name { text },
+         attribute value { text }
+      }+
+   }
+
 KeysConstants = 
-  element constants {
-  element constant {
-    attribute name { text },
-    attribute value { text }
-  }+
-}
+   element constants {
+      element constant {
+         attribute name { text },
+         attribute value { text }
+      }+
+   }
 
 KeysElements = 
    element elements {
@@ -57,8 +57,8 @@ KeysCommands =
 
 ################################################## cont-??.xml
 Define     = element define {
-    attribute name { text },
-    Constant* 
+   attribute name { text },
+   Constant* 
 }
 
 
@@ -139,7 +139,8 @@ Variable = element variable {
    attribute default { "yes" | "no" }? }
 
 Inherit = element inherit {
-   attribute name { text } }
+   attribute name { text },
+   attribute n { text }? }
 
 # --------------------------------------------------
 
