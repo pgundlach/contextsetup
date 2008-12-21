@@ -1,6 +1,6 @@
-# Last Change: Sat Jul 12 10:09:08 2008
+# Last Change: So 21 Dez 2008 20:31:02 CET
 
-# State: experimental (subject to change)
+# State: production
 # interface.rnc should be able to validate cont-??.xml and the
 # associated keys-??.xml
 
@@ -78,45 +78,47 @@ Sequence   = element sequence {
    | element variable { attribute value { text }}
    )+  }
 
-Arguments  = element arguments { (Args+ | element choice { (Args,Args) }) }
+Arguments  = element arguments { (Args+ ) }
   
 Args = ( Keywords | Assignments | Content | Triplet | Reference | Word 
        | Nothing | File | Csname | Index | Position | Displaymath | Tex )+
 
 Keywords   = element keywords { 
    att.optional?,
-   att.list?, 
+   att.list?,
+   att.count,
    att.interactive?,
    ( Resolve | (  Constant* & Inherit?  &  Variable* )  ) 
 }
 
 Resolve =  element resolve { attribute name { text } }
 
-Content    = element content {  att.list?, att.optional?, att.interactive? }
+Content    = element content {  att.list?, att.optional?, att.interactive?, att.count }
 
 Assignments = element assignments {
-   att.list?, att.optional?,  att.interactive?,
+   att.list?, att.optional?,  att.interactive?, att.count,
    ( Parameter* &  Inherit?  ) }
 
-Triplet    = element triplet { att.list }
+Triplet    = element triplet { att.list, att.count }
 
-Reference  = element reference { att.list?, att.optional?,  att.interactive? }
+Reference  = element reference { att.list?, att.optional?,  att.interactive?, att.count }
 
-Word       = element word { att.list? }
+Word       = element word { att.list?, att.count }
 
-Nothing    = element nothing { att.interactive?, attribute separator { text }?}
+Nothing    = element nothing { att.interactive?, attribute separator { text }?, att.count}
 
-File       = element file { empty }
+File       = element file { att.count }
 
-Csname     = element csname { empty }
+Csname     = element csname { att.count }
 
-Index      = element index { att.list? }
+Index      = element index { att.list?, att.count }
 
-Position   = element position { att.list? } 
+Position   = element position { att.list?, att.count } 
 
-Displaymath = element displaymath { empty }
+Displaymath = element displaymath { att.count }
 
 Tex        = element tex {
+   att.count,
    attribute command   { text },
    attribute separator { text }? }
 
@@ -147,4 +149,4 @@ Inherit = element inherit {
 att.optional    = attribute optional    { "yes" | "no" }
 att.list        = attribute list        { "yes" | "no" }
 att.interactive = attribute interactive { "yes" | "default" | "exclusive" }
-
+att.count       = attribute n           { xsd:integer }
