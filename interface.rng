@@ -13,9 +13,9 @@
 <!-- Comments to patrick@gundla.ch -->
 <grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" ns="http://www.pragma-ade.com/commands" xmlns="http://relaxng.org/ns/structure/1.0" 
   datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-  xmlns:sch="http://www.ascc.net/xml/schematron"
+  xmlns:sch="http://purl.oclc.org/dsdl/schematron"
   >
-  <sch:ns prefix="c" uri="http://www.pragma-ade.com/commands" xmlns:sch="http://www.ascc.net/xml/schematron"/>
+  <sch:ns prefix="c" uri="http://www.pragma-ade.com/commands"/>
   <start>
     <ref name="Interface"/>
   </start>
