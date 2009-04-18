@@ -17,5 +17,7 @@ To validate the file you can use several methods:
 
 If you make any changes to the <tt>interface.rng</tt> file, please send me the diffs!
 
+For info about schematron (and the iso_*, RNG2... files) see http://www.schematron.com/.
+
 Patrick Gundlach (patrick@gundla.ch) 4/2009
 
