@@ -1,11 +1,11 @@
-# Last Change: Sat Jul 12 10:09:08 2008
-
 # State: experimental (subject to change)
 # interface.rnc should be able to validate cont-??.xml and the
 # associated keys-??.xml
 
 # programs that work on the cont-??.xml files should be able to rely
 # on this schema.
+
+# See http://wiki.contextgarden.net/Interface.rnc
 
 # Comments to patrick@gundla.ch
 
@@ -64,6 +64,7 @@ Define     = element define {
 
 Command    = element command  { 
    attribute name      { text },
+   attribute id        { text },
    attribute type      { "standalone" | "environment" }?,
    attribute generated { "yes" | "no" }?,
    attribute file      { text }?,
@@ -85,40 +86,42 @@ Args = ( Keywords | Assignments | Content | Triplet | Reference | Word
 
 Keywords   = element keywords { 
    att.optional?,
-   att.list?, 
+   att.list?,
+   att.n,
    att.interactive?,
    ( Resolve | (  Constant* & Inherit?  &  Variable* )  ) 
 }
 
 Resolve =  element resolve { attribute name { text } }
 
-Content    = element content {  att.list?, att.optional?, att.interactive? }
+Content    = element content {  att.all }
 
 Assignments = element assignments {
-   att.list?, att.optional?,  att.interactive?,
+   att.list?, att.optional?,  att.interactive?, att.n,
    ( Parameter* &  Inherit?  ) }
 
-Triplet    = element triplet { att.list }
+Triplet    = element triplet { att.list, att.n }
 
-Reference  = element reference { att.list?, att.optional?,  att.interactive? }
+Reference  = element reference { att.all }
 
-Word       = element word { att.list? }
+Word       = element word { att.list?, att.n }
 
-Nothing    = element nothing { att.interactive?, attribute separator { text }?}
+Nothing    = element nothing { att.interactive?, attribute separator { text }?, att.n }
 
-File       = element file { empty }
+File       = element file { att.n }
 
-Csname     = element csname { empty }
+Csname     = element csname { att.n }
 
-Index      = element index { att.list? }
+Index      = element index { att.list?, att.n }
 
-Position   = element position { att.list? } 
+Position   = element position { att.list?, att.n } 
 
-Displaymath = element displaymath { empty }
+Displaymath = element displaymath { att.n }
 
 Tex        = element tex {
    attribute command   { text },
-   attribute separator { text }? }
+   attribute separator { text }?,
+   att.n }
 
 #  --------------------------------------------------
 Parameter = element parameter  {
@@ -140,11 +143,13 @@ Variable = element variable {
 
 Inherit = element inherit {
    attribute name { text },
+   attribute ref { text },
    attribute n { text }? }
 
 # --------------------------------------------------
 
+att.all         = att.list?, att.optional?, att.interactive?, att.n
 att.optional    = attribute optional    { "yes" | "no" }
 att.list        = attribute list        { "yes" | "no" }
 att.interactive = attribute interactive { "yes" | "default" | "exclusive" }
-
+att.n           = attribute n           { xsd:integer }
