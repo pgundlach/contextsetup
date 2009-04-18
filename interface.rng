@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Last Change: So 21 Dez 2008 20:31:02 CET -->
+<!--
+  State: production
+  interface.rnc should be able to validate cont-??.xml and the
+  associated keys-??.xml
+-->
+<!--
+  programs that work on the cont-??.xml files should be able to rely
+  on this schema.
+-->
+<!-- See http://wiki.contextgarden.net/Interface.rnc -->
+<!-- Comments to patrick@gundla.ch -->
+<grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" ns="http://www.pragma-ade.com/commands" xmlns="http://relaxng.org/ns/structure/1.0" 
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+  xmlns:sch="http://www.ascc.net/xml/schematron"
+  >
+  <sch:ns prefix="c" uri="http://www.pragma-ade.com/commands" xmlns:sch="http://www.ascc.net/xml/schematron"/>
+  <start>
+    <ref name="Interface"/>
+  </start>
+  <define name="Interface">
+    <element name="interface">
+      <attribute name="name"/>
+      <optional>
+        <attribute name="version"/>
+      </optional>
+      <attribute name="language"/>
+      <choice>
+        <group>
+          <zeroOrMore>
+            <ref name="Define"/>
+          </zeroOrMore>
+          <oneOrMore>
+            <ref name="Command"/>
+          </oneOrMore>
+        </group>
+        <oneOrMore>
+          <ref name="Keys"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="Keys">
+    <a:documentation>keys-??.xml</a:documentation>
+    <choice>
+      <ref name="KeysVariables"/>
+      <ref name="KeysConstants"/>
+      <ref name="KeysElements"/>
+      <ref name="KeysCommands"/>
+    </choice>
+  </define>
+  <define name="KeysVariables">
+    <element name="variables">
+      <oneOrMore>
+        <element name="variable">
+          <attribute name="name"/>
+          <attribute name="value"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="KeysConstants">
+    <element name="constants">
+      <oneOrMore>
+        <element name="constant">
+          <attribute name="name"/>
+          <attribute name="value"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="KeysElements">
+    <element name="elements">
+      <oneOrMore>
+        <element name="element">
+          <attribute name="name"/>
+          <attribute name="value"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="KeysCommands">
+    <element name="commands">
+      <oneOrMore>
+        <element name="command">
+          <attribute name="name"/>
+          <attribute name="value"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="Define">
+    <a:documentation>cont-??.xml</a:documentation>
+    <element name="define">
+      <attribute name="name"/>
+      <zeroOrMore>
+        <ref name="Constant"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="Command">
+    <element name="command">
+      <attribute name="name"/>
+      <attribute name="id"/>
+      <optional>
+        <attribute name="type">
+          <choice>
+            <value>standalone</value>
+            <value>environment</value>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="generated">
+          <choice>
+            <value>yes</value>
+            <value>no</value>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="file"/>
+      </optional>
+      <optional>
+        <attribute name="line"/>
+      </optional>
+      <optional>
+        <attribute name="from"/>
+      </optional>
+      <optional>
+        <attribute name="variant"/>
+      </optional>
+      <optional>
+        <attribute name="category"/>
+      </optional>
+      <ref name="Sequence"/>
+      <optional>
+        <ref name="Arguments"/>
+      </optional>
+    </element>
+  </define>
+  <define name="Sequence">
+    <element name="sequence">
+      <oneOrMore>
+        <choice>
+          <element name="string">
+            <attribute name="value"/>
+          </element>
+          <element name="variable">
+            <attribute name="value"/>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="Arguments">
+    <element name="arguments">
+      <oneOrMore>
+        <ref name="Args"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="Args">
+    <oneOrMore>
+      <choice>
+        <ref name="Keywords"/>
+        <ref name="Assignments"/>
+        <ref name="Content"/>
+        <ref name="Triplet"/>
+        <ref name="Reference"/>
+        <ref name="Word"/>
+        <ref name="Nothing"/>
+        <ref name="File"/>
+        <ref name="Csname"/>
+        <ref name="Index"/>
+        <ref name="Position"/>
+        <ref name="Displaymath"/>
+        <ref name="Tex"/>
+      </choice>
+    </oneOrMore>
+  </define>
+  <define name="Keywords">
+    <element name="keywords">
+      <optional>
+        <ref name="att.optional"/>
+      </optional>
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <ref name="att.count"/>
+      <optional>
+        <ref name="att.interactive"/>
+      </optional>
+      <choice>
+        <ref name="Resolve"/>
+        <interleave>
+          <zeroOrMore>
+            <ref name="Constant"/>
+          </zeroOrMore>
+          <optional>
+            <ref name="Inherit"/>
+          </optional>
+          <zeroOrMore>
+            <ref name="Variable"/>
+          </zeroOrMore>
+        </interleave>
+      </choice>
+    </element>
+  </define>
+  <define name="Resolve">
+    <element name="resolve">
+      <sch:pattern name="Check that any resolve has a cd:define.">
+        <sch:rule context="c:resolve">
+          <sch:assert test="//c:define[@name=current()/@name]">resolve must be defined</sch:assert>
+        </sch:rule>
+      </sch:pattern>
+      <attribute name="name"/>
+    </element>
+  </define>
+  <define name="Content">
+    <element name="content">
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <optional>
+        <ref name="att.optional"/>
+      </optional>
+      <optional>
+        <ref name="att.interactive"/>
+      </optional>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Assignments">
+    <element name="assignments">
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <optional>
+        <ref name="att.optional"/>
+      </optional>
+      <optional>
+        <ref name="att.interactive"/>
+      </optional>
+      <ref name="att.count"/>
+      <interleave>
+        <zeroOrMore>
+          <ref name="Parameter"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="Inherit"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="Triplet">
+    <element name="triplet">
+      <ref name="att.list"/>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Reference">
+    <element name="reference">
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <optional>
+        <ref name="att.optional"/>
+      </optional>
+      <optional>
+        <ref name="att.interactive"/>
+      </optional>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Word">
+    <element name="word">
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Nothing">
+    <element name="nothing">
+      <optional>
+        <ref name="att.interactive"/>
+      </optional>
+      <optional>
+        <attribute name="separator"/>
+      </optional>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="File">
+    <element name="file">
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Csname">
+    <element name="csname">
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Index">
+    <element name="index">
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Position">
+    <element name="position">
+      <optional>
+        <ref name="att.list"/>
+      </optional>
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Displaymath">
+    <element name="displaymath">
+      <ref name="att.count"/>
+    </element>
+  </define>
+  <define name="Tex">
+    <element name="tex">
+      <ref name="att.count"/>
+      <attribute name="command"/>
+      <optional>
+        <attribute name="separator"/>
+      </optional>
+    </element>
+  </define>
+  <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <define name="Parameter">
+    <element name="parameter">
+      <attribute name="name"/>
+      <zeroOrMore>
+        <choice>
+          <ref name="Resolve"/>
+          <ref name="ParameterContents"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="ParameterContents">
+    <oneOrMore>
+      <choice>
+        <element name="constant">
+          <attribute name="type"/>
+          <optional>
+            <attribute name="default"/>
+          </optional>
+        </element>
+        <element name="variable">
+          <attribute name="type"/>
+        </element>
+      </choice>
+    </oneOrMore>
+  </define>
+  <define name="Constant">
+    <element name="constant">
+      <attribute name="type"/>
+      <optional>
+        <attribute name="default">
+          <choice>
+            <value>yes</value>
+            <value>no</value>
+          </choice>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <define name="Variable">
+    <element name="variable">
+      <attribute name="type"/>
+      <optional>
+        <attribute name="default">
+          <choice>
+            <value>yes</value>
+            <value>no</value>
+          </choice>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <define name="Inherit">
+    <element name="inherit">
+      <sch:pattern name="check inherit">
+        <sch:rule context="c:inherit">
+          <sch:assert test="//c:command[@id=current()/@ref]">The referenced commmand does not exist!</sch:assert>
+        </sch:rule>
+      </sch:pattern>
+      <attribute name="name"/>
+      <attribute name="ref"/>
+      <optional>
+        <attribute name="n"/>
+      </optional>
+    </element>
+  </define>
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <define name="att.all">
+    <optional>
+      <ref name="att.list"/>
+    </optional>
+    <optional>
+      <ref name="att.optional"/>
+    </optional>
+    <optional>
+      <ref name="att.interactive"/>
+    </optional>
+    <ref name="att.count"/>
+  </define>
+  <define name="att.optional">
+    <attribute name="optional">
+      <choice>
+        <value>yes</value>
+        <value>no</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="att.list">
+    <attribute name="list">
+      <choice>
+        <value>yes</value>
+        <value>no</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="att.interactive">
+    <attribute name="interactive">
+      <choice>
+        <value>yes</value>
+        <value>default</value>
+        <value>exclusive</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="att.count">
+    <attribute name="n">
+      <data type="integer"/>
+    </attribute>
+  </define>
+</grammar>
